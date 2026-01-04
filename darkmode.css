@@ -1,0 +1,1001 @@
+/* ============================================
+   DARK MODE STYLES - AgriSmart
+   File: css/darkmode.css
+   Include this file in all pages
+   ============================================ */
+
+/* ==========================================
+   CSS VARIABLES FOR DARK MODE
+   ========================================== */
+
+/* Apply dark mode to html element immediately to prevent flash */
+html.dark-mode {
+    color-scheme: dark;
+}
+
+/* Dark Mode Variables Override */
+body.dark-mode {
+    --primary-color: #5cb85c;
+    --primary-light: #8bc34a;
+    --bg-primary: linear-gradient(135deg, #1a1a2e, #16213e);
+    --bg-card: rgba(30, 30, 50, 0.95);
+    --text-primary: #5cb85c;
+    --text-secondary: #a0a0a0;
+    --text-description: #888888;
+    --border-color: rgba(92, 184, 92, 0.3);
+    --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================
+   BODY & CONTAINER
+   ========================================== */
+
+body.dark-mode {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #e0e0e0;
+}
+
+body.dark-mode .container {
+    color: #e0e0e0;
+}
+
+/* ==========================================
+   HEADER
+   ========================================== */
+
+body.dark-mode .header {
+    background: rgba(30, 30, 50, 0.6);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .header h1 {
+    background: linear-gradient(90deg, #5cb85c, #8bc34a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+body.dark-mode .header p {
+    color: #a0a0a0;
+}
+
+/* ==========================================
+   NAVIGATION
+   ========================================== */
+
+body.dark-mode .nav-links a {
+    background: rgba(50, 50, 70, 0.8);
+    color: #b0b0b0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .nav-links a:hover {
+    background: rgba(70, 70, 90, 0.9);
+    color: #5cb85c;
+    box-shadow: 0 5px 15px rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .nav-links a.active {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+    color: white;
+}
+
+/* ==========================================
+   CARDS & SECTIONS
+   ========================================== */
+
+body.dark-mode .metric-card,
+body.dark-mode .chart-container,
+body.dark-mode .recommendations,
+body.dark-mode .settings-section,
+body.dark-mode .report-card,
+body.dark-mode .control-panel,
+body.dark-mode .sensor-detail,
+body.dark-mode .device-card {
+    background: rgba(30, 30, 50, 0.95);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    border-left-color: #5cb85c;
+}
+
+body.dark-mode .metric-card:hover,
+body.dark-mode .chart-container:hover,
+body.dark-mode .recommendations:hover,
+body.dark-mode .settings-section:hover,
+body.dark-mode .report-card:hover,
+body.dark-mode .control-panel:hover {
+    box-shadow: 0 10px 30px rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .metric-card h2,
+body.dark-mode .stat-value {
+    color: #5cb85c;
+}
+
+body.dark-mode .metric-card p,
+body.dark-mode .recommendation-item p,
+body.dark-mode .alert-item p {
+    color: #a0a0a0;
+}
+
+/* ==========================================
+   STATUS BADGES
+   ========================================== */
+
+body.dark-mode .status.optimal,
+body.dark-mode .status-indicator.status-optimal {
+    background-color: rgba(92, 184, 92, 0.2);
+    color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+body.dark-mode .status.warning,
+body.dark-mode .status-indicator.status-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+/* NEW: pH Alert Status Styles */
+body.dark-mode .status-indicator.status-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+body.dark-mode .status-indicator.status-info {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border-color: #60a5fa;
+}
+
+/* ==========================================
+   DEVICE STATUS CARDS
+   ========================================== */
+
+body.dark-mode .device-card.device-online {
+    background: linear-gradient(135deg, rgba(92, 184, 92, 0.1), rgba(92, 184, 92, 0.05));
+    border-left-color: #5cb85c;
+}
+
+body.dark-mode .device-card.device-warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+    border-left-color: #ffc107;
+}
+
+/* NEW: Device Offline Style */
+body.dark-mode .device-card.device-offline {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+    border-left-color: #dc3545;
+}
+
+body.dark-mode .device-card.device-offline h4 i {
+    color: #ff6b6b;
+}
+
+body.dark-mode .device-card h4 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .device-card p {
+    color: #a0a0a0;
+}
+
+/* ==========================================
+   ESP32 INFO BAR (NEW)
+   ========================================== */
+
+body.dark-mode .esp32-info-bar {
+    background: linear-gradient(135deg, rgba(92, 184, 92, 0.1), rgba(92, 184, 92, 0.05));
+    border-left-color: #5cb85c;
+}
+
+body.dark-mode .esp32-info-item .label {
+    color: #e0e0e0;
+}
+
+body.dark-mode .esp32-info-item .value {
+    background: rgba(0, 0, 0, 0.3);
+    color: #a0a0a0;
+}
+
+body.dark-mode .esp32-info-item i {
+    color: #5cb85c;
+}
+
+/* ==========================================
+   RECOMMENDATION ITEMS
+   ========================================== */
+
+body.dark-mode .recommendation-item {
+    border-bottom-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .recommendation-item:hover {
+    background: rgba(92, 184, 92, 0.1);
+}
+
+body.dark-mode .recommendation-item strong {
+    color: #e0e0e0;
+}
+
+/* ==========================================
+   ALERT ITEMS
+   ========================================== */
+
+body.dark-mode .alert-item.alert-low {
+    background: rgba(92, 184, 92, 0.1);
+    border-left-color: #5cb85c;
+}
+
+body.dark-mode .alert-item.alert-medium {
+    background: rgba(245, 158, 11, 0.1);
+    border-left-color: #f59e0b;
+}
+
+body.dark-mode .alert-item.alert-high {
+    background: rgba(239, 68, 68, 0.1);
+    border-left-color: #ef4444;
+}
+
+body.dark-mode .alert-item strong {
+    color: #e0e0e0;
+}
+
+/* ==========================================
+   SETTING ITEMS (IMPROVED)
+   ========================================== */
+
+body.dark-mode .setting-item {
+    border-bottom-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .setting-item:hover {
+    background: linear-gradient(90deg, rgba(92, 184, 92, 0.15), rgba(92, 184, 92, 0.08), transparent);
+    border-left-color: #5cb85c;
+}
+
+body.dark-mode .setting-label {
+    color: #e0e0e0;
+}
+
+body.dark-mode .setting-description {
+    color: #888888;
+}
+
+body.dark-mode .section-title {
+    color: #5cb85c;
+}
+
+/* ==========================================
+   THRESHOLD INFO BOX (NEW)
+   ========================================== */
+
+body.dark-mode .threshold-info {
+    background: linear-gradient(135deg, rgba(92, 184, 92, 0.1), rgba(92, 184, 92, 0.05));
+    border-left-color: #5cb85c;
+}
+
+body.dark-mode .threshold-info i {
+    color: #5cb85c;
+}
+
+body.dark-mode .threshold-info p {
+    color: #a0a0a0;
+}
+
+/* ==========================================
+   THRESHOLD VISUAL BAR (NEW)
+   ========================================== */
+
+body.dark-mode .threshold-visual {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .threshold-bar {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================
+   CONTROL ITEMS
+   ========================================== */
+
+body.dark-mode .control-item {
+    border-bottom-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .control-item strong {
+    color: #e0e0e0;
+}
+
+body.dark-mode .control-item p {
+    color: #888888;
+}
+
+body.dark-mode .control-panel h3 {
+    color: #5cb85c;
+}
+
+/* ==========================================
+   FORM ELEMENTS
+   ========================================== */
+
+body.dark-mode .input-field,
+body.dark-mode .select-field,
+body.dark-mode .input-number,
+body.dark-mode .select-control {
+    background: rgba(50, 50, 70, 0.9);
+    border-color: rgba(92, 184, 92, 0.3);
+    color: #e0e0e0;
+}
+
+body.dark-mode .input-field:focus,
+body.dark-mode .select-field:focus,
+body.dark-mode .input-number:focus,
+body.dark-mode .select-control:focus {
+    border-color: #5cb85c;
+    box-shadow: 0 0 0 3px rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .input-field::placeholder {
+    color: #666666;
+}
+
+/* NEW: Input Group Suffix */
+body.dark-mode .input-suffix {
+    color: #888888;
+}
+
+/* ==========================================
+   TOGGLE SWITCH
+   ========================================== */
+
+body.dark-mode .toggle-switch {
+    background: #404040;
+}
+
+body.dark-mode .toggle-switch.active {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+}
+
+/* Disabled toggle style */
+body.dark-mode .toggle-switch[style*="opacity: 0.5"] {
+    background: #333333;
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+
+body.dark-mode .btn {
+    box-shadow: 0 4px 15px rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .btn:hover {
+    box-shadow: 0 6px 25px rgba(92, 184, 92, 0.4);
+}
+
+body.dark-mode .btn:active {
+    box-shadow: 0 3px 10px rgba(92, 184, 92, 0.3);
+}
+
+/* Button ripple effect */
+body.dark-mode .btn .ripple {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .btn-camera {
+    background: rgba(50, 50, 70, 0.9);
+    color: #e0e0e0;
+    border-color: rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .btn-camera:hover {
+    background: rgba(92, 184, 92, 0.2);
+    border-color: #5cb85c;
+}
+
+body.dark-mode .btn-small {
+    background: rgba(50, 50, 70, 0.9);
+    color: #e0e0e0;
+}
+
+body.dark-mode .btn-small:hover {
+    background: rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .btn-secondary {
+    box-shadow: 0 4px 15px rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .btn-danger {
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+body.dark-mode .btn-danger:hover {
+    box-shadow: 0 6px 25px rgba(255, 107, 107, 0.4);
+}
+
+/* ==========================================
+   CHART CONTAINER
+   ========================================== */
+
+body.dark-mode .chart-container h3,
+body.dark-mode .chart-header .chart-title {
+    color: #5cb85c;
+}
+
+body.dark-mode .chart-select {
+    background: rgba(50, 50, 70, 0.9);
+    color: #e0e0e0;
+    border-color: rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .chart-button {
+    background: rgba(50, 50, 70, 0.9);
+    color: #e0e0e0;
+    border-color: rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .chart-button:hover {
+    background: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .chart-stats {
+    background: rgba(40, 40, 60, 0.5);
+}
+
+body.dark-mode .stat-label {
+    color: #888888;
+}
+
+/* NEW: Live indicator */
+body.dark-mode .status-live {
+    background: rgba(92, 184, 92, 0.15);
+    color: #5cb85c;
+}
+
+body.dark-mode .pulse-dot {
+    background: #5cb85c;
+}
+
+/* ==========================================
+   CAMERA PANEL
+   ========================================== */
+
+body.dark-mode .camera-panel {
+    background: rgba(30, 30, 50, 0.95);
+}
+
+body.dark-mode .camera-container {
+    background: rgba(20, 20, 40, 0.5);
+}
+
+body.dark-mode .camera-settings {
+    background: rgba(40, 40, 60, 0.5);
+    border-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .camera-settings h4 {
+    color: #5cb85c;
+}
+
+body.dark-mode .camera-settings label {
+    color: #a0a0a0;
+}
+
+body.dark-mode .camera-info {
+    background: rgba(40, 40, 60, 0.5);
+}
+
+body.dark-mode .camera-info .info-item {
+    color: #a0a0a0;
+}
+
+body.dark-mode .camera-info strong {
+    color: #e0e0e0;
+}
+
+/* ==========================================
+   SENSOR DETAILS
+   ========================================== */
+
+body.dark-mode .sensor-detail h4 {
+    color: #5cb85c;
+}
+
+body.dark-mode .sensor-reading {
+    color: #e0e0e0;
+}
+
+body.dark-mode .progress-bar {
+    background: rgba(50, 50, 70, 0.5);
+}
+
+body.dark-mode .progress-fill {
+    background: linear-gradient(90deg, #2c7a2c, #5cb85c);
+}
+
+/* ==========================================
+   USER MENU
+   ========================================== */
+
+body.dark-mode .user-info {
+    background: rgba(50, 50, 70, 0.9);
+}
+
+body.dark-mode .user-info:hover {
+    background: rgba(60, 60, 80, 0.95);
+    box-shadow: 0 5px 15px rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .user-name {
+    color: #e0e0e0;
+}
+
+body.dark-mode .user-info i.fa-chevron-down {
+    color: #888888;
+}
+
+body.dark-mode .user-dropdown {
+    background: rgba(40, 40, 60, 0.98);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .dropdown-item {
+    color: #e0e0e0;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background: rgba(92, 184, 92, 0.1);
+    color: #5cb85c;
+}
+
+body.dark-mode .dropdown-item.logout {
+    color: #ff6b6b;
+}
+
+body.dark-mode .dropdown-item.logout:hover {
+    background: rgba(255, 107, 107, 0.1);
+}
+
+body.dark-mode .user-dropdown hr {
+    border-top-color: rgba(92, 184, 92, 0.2);
+}
+
+/* ==========================================
+   NOTIFICATION (IMPROVED)
+   ========================================== */
+
+body.dark-mode .notification {
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .notification.success {
+    background: linear-gradient(135deg, #1a4d1a, #2c7a2c);
+    box-shadow: 0 8px 30px rgba(44, 122, 44, 0.5);
+}
+
+body.dark-mode .notification.info {
+    background: linear-gradient(135deg, #0d4a5c, #17a2b8);
+    box-shadow: 0 8px 30px rgba(23, 162, 184, 0.5);
+}
+
+body.dark-mode .notification.warning {
+    background: linear-gradient(135deg, #7a4d0b, #f59e0b);
+    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.5);
+}
+
+body.dark-mode .notification.error {
+    background: linear-gradient(135deg, #7a1a23, #dc3545);
+    box-shadow: 0 8px 30px rgba(220, 53, 69, 0.5);
+}
+
+body.dark-mode .lang-notification {
+    background: linear-gradient(135deg, #1a4d1a, #2c7a2c);
+}
+
+/* ==========================================
+   SESSION TIMEOUT MODAL (NEW)
+   ========================================== */
+
+body.dark-mode #session-warning-modal > div > div {
+    background: rgba(30, 30, 50, 0.98);
+    border: 1px solid rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode #session-warning-modal h3 {
+    color: #f59e0b;
+}
+
+body.dark-mode #session-warning-modal p {
+    color: #a0a0a0;
+}
+
+body.dark-mode #session-warning-modal #countdown-timer {
+    color: #ff6b6b;
+}
+
+/* ==========================================
+   CONNECTION STATUS INDICATOR (NEW)
+   ========================================== */
+
+body.dark-mode .connection-status {
+    background: rgba(30, 30, 50, 0.95);
+    border: 1px solid rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .connection-status.connected {
+    border-color: #5cb85c;
+}
+
+body.dark-mode .connection-status.disconnected {
+    border-color: #dc3545;
+}
+
+/* ==========================================
+   FLOATING LEAVES (make them more subtle)
+   ========================================== */
+
+body.dark-mode .leaf {
+    opacity: 0.3;
+}
+
+/* ==========================================
+   SCROLLBAR
+   ========================================== */
+
+body.dark-mode::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.dark-mode::-webkit-scrollbar-track {
+    background: #1a1a2e;
+}
+
+body.dark-mode::-webkit-scrollbar-thumb {
+    background: #5cb85c;
+    border-radius: 5px;
+}
+
+body.dark-mode::-webkit-scrollbar-thumb:hover {
+    background: #4aa84a;
+}
+
+/* ==========================================
+   ANIMATIONS (reduce glow in dark mode)
+   ========================================== */
+
+body.dark-mode .metric-card::before,
+body.dark-mode .chart-container::before,
+body.dark-mode .recommendations::before,
+body.dark-mode .settings-section::before,
+body.dark-mode .report-card::before {
+    background: linear-gradient(
+        to bottom right,
+        rgba(92, 184, 92, 0) 0%,
+        rgba(92, 184, 92, 0.05) 50%,
+        rgba(92, 184, 92, 0) 100%
+    );
+}
+
+@keyframes cardGlowDark {
+    0% { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+    100% { box-shadow: 0 5px 25px rgba(92, 184, 92, 0.15); }
+}
+
+body.dark-mode .metric-card,
+body.dark-mode .chart-container,
+body.dark-mode .recommendations,
+body.dark-mode .settings-section,
+body.dark-mode .report-card,
+body.dark-mode .control-panel {
+    animation: fadeInUp 0.5s ease-out, cardGlowDark 6s ease-in-out infinite alternate;
+}
+
+/* ==========================================
+   pH SCALE REFERENCE (NEW)
+   ========================================== */
+
+body.dark-mode .sensor-detail > div:last-child {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================
+   SELECTION HIGHLIGHT
+   ========================================== */
+
+body.dark-mode ::selection {
+    background: rgba(92, 184, 92, 0.3);
+    color: #ffffff;
+}
+
+body.dark-mode ::-moz-selection {
+    background: rgba(92, 184, 92, 0.3);
+    color: #ffffff;
+}
+
+/* ==========================================
+   FOCUS VISIBLE (Accessibility)
+   ========================================== */
+
+body.dark-mode :focus-visible {
+    outline: 2px solid #5cb85c;
+    outline-offset: 2px;
+}
+
+body.dark-mode .btn:focus-visible,
+body.dark-mode .toggle-switch:focus-visible,
+body.dark-mode .input-field:focus-visible,
+body.dark-mode .select-field:focus-visible {
+    outline: 2px solid #5cb85c;
+    outline-offset: 2px;
+}
+/* ==========================================
+   DEVICE MANAGEMENT - DARK MODE (NEW)
+   ========================================== */
+
+/* Device Info Box */
+body.dark-mode .device-info-box {
+    background: linear-gradient(135deg, rgba(92, 184, 92, 0.12), rgba(92, 184, 92, 0.08));
+    border-left-color: #5cb85c;
+}
+
+body.dark-mode .device-info-box i {
+    color: #5cb85c;
+}
+
+body.dark-mode .device-info-box p {
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+body.dark-mode .device-info-box p strong {
+    color: #5cb85c;
+    font-weight: 600;
+}
+
+body.dark-mode .device-info-box ol {
+    color: #e0e0e0;
+}
+
+body.dark-mode .device-info-box ol li {
+    color: #e0e0e0;
+}
+
+body.dark-mode .device-info-box ol li strong {
+    color: #5cb85c;
+    font-weight: 600;
+}
+
+/* User ID Section */
+body.dark-mode .user-id-section {
+    border-bottom-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .user-id-box {
+    background: linear-gradient(135deg, rgba(92, 184, 92, 0.08), rgba(92, 184, 92, 0.03));
+    border-color: rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .user-id-label {
+    color: #a0a0a0;
+}
+
+body.dark-mode .user-id-label i {
+    color: #5cb85c;
+}
+
+body.dark-mode .user-id-value {
+    background: rgba(0, 0, 0, 0.3);
+    color: #5cb85c;
+}
+
+body.dark-mode .user-id-hint {
+    color: #888888;
+}
+
+/* Device Category */
+body.dark-mode .device-category {
+    background: rgba(30, 30, 50, 0.5);
+    border-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .device-category-title {
+    color: #e0e0e0;
+}
+
+body.dark-mode .device-category-title i {
+    color: #5cb85c;
+}
+
+/* Device Empty State */
+body.dark-mode .device-empty {
+    background: rgba(30, 30, 50, 0.3);
+    border-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .device-empty i {
+    color: #666666;
+}
+
+body.dark-mode .device-empty p {
+    color: #888888;
+}
+
+/* Device Card */
+body.dark-mode .device-card {
+    background: rgba(30, 30, 50, 0.95);
+    border-left-color: #5cb85c;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .device-card:hover {
+    box-shadow: 0 8px 30px rgba(92, 184, 92, 0.15);
+}
+
+body.dark-mode .device-card-info h4 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .device-card-id {
+    color: #5cb85c;
+}
+
+body.dark-mode .device-status.online {
+    background: rgba(39, 174, 96, 0.15);
+    color: #4ade80;
+}
+
+body.dark-mode .device-status.offline {
+    background: rgba(220, 53, 69, 0.15);
+    color: #ff6b6b;
+}
+
+body.dark-mode .device-card-details {
+    color: #888888;
+}
+
+body.dark-mode .device-card-details i {
+    color: #5cb85c;
+}
+
+body.dark-mode .device-card-actions {
+    border-top-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .device-btn-edit {
+    background: rgba(92, 184, 92, 0.15);
+    color: #5cb85c;
+}
+
+body.dark-mode .device-btn-edit:hover {
+    background: #5cb85c;
+    color: white;
+}
+
+body.dark-mode .device-btn-delete {
+    background: rgba(220, 53, 69, 0.15);
+    color: #ff6b6b;
+}
+
+body.dark-mode .device-btn-delete:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* Device Modal */
+body.dark-mode .device-modal-content {
+    background: rgba(30, 30, 50, 0.98);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .device-modal-header {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+}
+
+body.dark-mode .device-modal-body {
+    background: transparent;
+}
+
+body.dark-mode .form-group label {
+    color: #e0e0e0;
+}
+
+body.dark-mode .form-group label i {
+    color: #5cb85c;
+}
+
+body.dark-mode .form-group input {
+    background: rgba(50, 50, 70, 0.9);
+    border-color: rgba(92, 184, 92, 0.3);
+    color: #e0e0e0;
+}
+
+body.dark-mode .form-group input:focus {
+    border-color: #5cb85c;
+    box-shadow: 0 0 0 3px rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .form-group input.readonly-input {
+    background: rgba(30, 30, 50, 0.9);
+    color: #888888;
+}
+
+body.dark-mode .form-group input::placeholder {
+    color: #666666;
+}
+
+body.dark-mode .input-prefix {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+}
+
+body.dark-mode .form-hint {
+    color: #888888;
+}
+
+body.dark-mode .device-modal-footer {
+    background: rgba(0, 0, 0, 0.2);
+    border-top-color: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .btn-cancel {
+    background: rgba(50, 50, 70, 0.9);
+    color: #a0a0a0;
+}
+
+body.dark-mode .btn-cancel:hover {
+    background: rgba(70, 70, 90, 0.9);
+    color: #e0e0e0;
+}
+
+/* Delete Modal */
+body.dark-mode .device-modal-content.delete-confirm {
+    background: rgba(30, 30, 50, 0.98);
+}
+
+body.dark-mode .delete-header {
+    background: linear-gradient(135deg, #dc3545, #ff6b6b) !important;
+}
+
+body.dark-mode .delete-message {
+    color: #e0e0e0;
+}
+
+body.dark-mode .delete-device-info {
+    background: rgba(220, 53, 69, 0.15);
+}
+
+body.dark-mode .delete-device-info strong {
+    color: #e0e0e0;
+}
+
+body.dark-mode .delete-device-info span {
+    color: #ff6b6b;
+}
+
+body.dark-mode .delete-warning {
+    color: #fbbf24;
+}
+
+/* Toast Notification */
+body.dark-mode .toast {
+    background: rgba(30, 30, 50, 0.98);
+    color: #e0e0e0;
+    border-left-color: #5cb85c;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .toast i {
+    color: #5cb85c;
+}
+
+/* Copy Button */
+body.dark-mode .copy-btn {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+}
+
+body.dark-mode .copy-btn:hover {
+    box-shadow: 0 4px 20px rgba(92, 184, 92, 0.4);
+}

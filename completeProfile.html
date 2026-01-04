@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart - Lengkapi Profil</title>
+    
+    <!-- Apply dark mode immediately to prevent flash -->
+    <script>
+        (function() {
+            const darkMode = localStorage.getItem('darkMode');
+            if (darkMode === 'enabled') {
+                document.documentElement.classList.add('dark-mode');
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="completeProfile.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="../css/darkmode.css">
+    <link rel="stylesheet" href="auth-darkmode.css">
+</head>
+<body>
+    <!-- Floating Leaves Background -->
+    <div id="leaves-container"></div>
+
+    <div class="auth-container">
+        <div class="auth-card register">
+            <!-- Header -->
+            <div class="auth-header">
+                <div class="logo-container">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%232c7a2c' opacity='0.8'/><path fill='%23ffffff' d='M50 20 Q70 50 50 80 Q30 50 50 20 Z'/><circle cx='50' cy='50' r='15' fill='%23ffffff'/><path fill='%232c7a2c' d='M50 35 Q55 50 50 65 Q45 50 50 35 Z'/></svg>" 
+                         alt="AgriSmart Logo" class="logo">
+                    <h1 data-lang="auth.completeProfileTitle">AgriSmart</h1>
+                </div>
+                <p data-lang="auth.completeProfileSubtitle">Lengkapi Data untuk Memulai Pertanian Cerdas</p>
+            </div>
+
+            <!-- Google User Info Banner -->
+            <div class="google-user-banner" id="google-user-banner">
+                <div class="google-avatar" id="google-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="google-user-info">
+                    <span class="google-user-name" id="google-name">Nama Pengguna</span>
+                    <span class="google-user-email" id="google-email">email@gmail.com</span>
+                </div>
+                <div class="google-badge">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' width='16' height='16'><path fill='%234285F4' d='M44 24c0-1.3-.1-2.7-.4-4H24v7.6h11.3c-.5 2.6-2 4.8-4.2 6.3v5.2h6.8c4-3.7 6.1-9 6.1-15.1z'/><path fill='%2334A853' d='M24 44c5.7 0 10.4-1.9 13.9-5.1l-6.8-5.2c-1.9 1.3-4.3 2-7.1 2-5.5 0-10.1-3.7-11.8-8.6H5.2v5.4C8.7 39.5 15.8 44 24 44z'/><path fill='%23FBBC05' d='M12.2 27.1c-.4-1.3-.7-2.7-.7-4.1s.3-2.8.7-4.1v-5.4H5.2C3.8 16.3 3 20 3 24s.8 7.7 2.2 10.5l7-5.4z'/><path fill='%23EA4335' d='M24 9.5c3.1 0 5.9 1.1 8.1 3.2l6.1-6.1C34.4 3.2 29.7 1 24 1 15.8 1 8.7 5.5 5.2 12.5l7 5.4c1.7-4.9 6.3-8.4 11.8-8.4z'/></svg>" alt="Google">
+                    <span data-lang="auth.googleBadge">Google</span>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text" data-lang="auth.profileCompleteError">Terjadi kesalahan</span>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span id="success-text" data-lang="auth.profileCompleteSuccess">Profil berhasil dilengkapi!</span>
+            </div>
+
+            <!-- Complete Profile Form -->
+            <form class="auth-form" id="complete-profile-form" onsubmit="handleCompleteProfile(event)">
+                <!-- Nama Lengkap -->
+                <div class="form-group">
+                    <label for="fullname">
+                        <span data-lang="auth.fullName">Nama Lengkap</span> 
+                        <span class="required" data-lang="auth.required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="text" id="fullname" name="fullname" data-lang-placeholder="auth.fullNamePlaceholder" placeholder="Masukkan nama lengkap" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+
+                <!-- Nomor HP -->
+                <div class="form-group">
+                    <label for="phone">
+                        <span data-lang="auth.phone">Nomor HP</span> 
+                        <span class="required" data-lang="auth.required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="tel" id="phone" name="phone" data-lang-placeholder="auth.phonePlaceholder" placeholder="08xxxxxxxxxx" required>
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <p class="input-hint" data-lang="auth.phoneHint">Contoh: 081234567890</p>
+                </div>
+
+                <!-- Tempat & Tanggal Lahir -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="birthplace">
+                            <span data-lang="auth.birthplace">Tempat Lahir</span> 
+                            <span class="required" data-lang="auth.required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" id="birthplace" name="birthplace" data-lang-placeholder="auth.birthplacePlaceholder" placeholder="Kota kelahiran" required>
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthdate">
+                            <span data-lang="auth.birthdate">Tanggal Lahir</span> 
+                            <span class="required" data-lang="auth.required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="date" id="birthdate" name="birthdate" required>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bidang Pertanian -->
+                <div class="form-group">
+                    <label>
+                        <span data-lang="auth.farmingField">Petani di Bidang Apa?</span> 
+                        <span class="required" data-lang="auth.required">*</span>
+                    </label>
+                    <div class="bidang-tags" id="bidang-container">
+                        <label class="bidang-tag" data-value="cabai">
+                            <input type="checkbox" name="bidang" value="cabai">
+                            🌶️ <span data-lang="auth.chili">Cabai</span>
+                        </label>
+                        <label class="bidang-tag" data-value="tomat">
+                            <input type="checkbox" name="bidang" value="tomat">
+                            🍅 <span data-lang="auth.tomato">Tomat</span>
+                        </label>
+                        <label class="bidang-tag" data-value="terong">
+                            <input type="checkbox" name="bidang" value="terong">
+                            🍆 <span data-lang="auth.eggplant">Terong</span>
+                        </label>
+                        <label class="bidang-tag" data-value="padi">
+                            <input type="checkbox" name="bidang" value="padi">
+                            🌾 <span data-lang="auth.rice">Padi</span>
+                        </label>
+                        <label class="bidang-tag" data-value="jagung">
+                            <input type="checkbox" name="bidang" value="jagung">
+                            🌽 <span data-lang="auth.corn">Jagung</span>
+                        </label>
+                        <label class="bidang-tag" data-value="sayuran">
+                            <input type="checkbox" name="bidang" value="sayuran">
+                            🥬 <span data-lang="auth.vegetables">Sayuran</span>
+                        </label>
+                        <label class="bidang-tag" data-value="buah">
+                            <input type="checkbox" name="bidang" value="buah">
+                            🍎 <span data-lang="auth.fruits">Buah-buahan</span>
+                        </label>
+                        <label class="bidang-tag" data-value="lainnya" id="bidang-lainnya">
+                            <input type="checkbox" name="bidang" value="lainnya">
+                            ➕ <span data-lang="auth.others">Lainnya</span>
+                        </label>
+                    </div>
+                    <!-- Custom Bidang Input -->
+                    <div class="custom-bidang" id="custom-bidang">
+                        <div class="input-wrapper" style="margin-top: 0.5rem;">
+                            <input type="text" id="custom-bidang-input" name="custom_bidang" data-lang-placeholder="auth.customFieldPlaceholder" placeholder="Sebutkan bidang pertanian Anda">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alamat (Opsional) -->
+                <div class="form-group">
+                    <label for="address" data-lang="auth.address">Alamat Kebun/Lahan (Opsional)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="address" name="address" data-lang-placeholder="auth.addressPlaceholder" placeholder="Alamat lokasi pertanian Anda">
+                        <i class="fas fa-map"></i>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">
+                        <span data-lang="auth.password">Kata Sandi</span> 
+                        <span class="required" data-lang="auth.required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" data-lang-placeholder="auth.passwordMinimal" placeholder="Minimal 8 karakter" required minlength="8" oninput="checkPasswordStrength(this.value)">
+                        <i class="fas fa-lock"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                            <i class="fas fa-eye" id="password-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="password-strength-bar"></div>
+                    </div>
+                    <p class="password-hint" id="password-hint" data-lang="auth.passwordHint">Gunakan minimal 8 karakter dengan huruf dan angka</p>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirm-password">
+                        <span data-lang="auth.confirmPassword">Konfirmasi Kata Sandi</span> 
+                        <span class="required" data-lang="auth.required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirm-password" name="confirm_password" data-lang-placeholder="auth.confirmPasswordPlaceholder" placeholder="Ulangi kata sandi" required>
+                        <i class="fas fa-lock"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
+                            <i class="fas fa-eye" id="confirm-password-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" id="complete-btn">
+                    <i class="fas fa-check-circle"></i>
+                    <span data-lang="auth.saveAndContinue">Simpan & Lanjutkan</span>
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div class="auth-footer">
+                <p>
+                    <span data-lang="auth.useAnotherAccount">Ingin menggunakan akun lain?</span> 
+                    <a href="#" onclick="logoutAndRedirect(event)" data-lang="auth.logout">Keluar</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Pesan notifikasi</span>
+    </div>
+
+    <!-- Language Files (Load first) -->
+    <script src="../lang/Id.js"></script>
+    <script src="../lang/En.js"></script>
+    
+    <!-- Language Manager -->
+    <script src="../lang/language.js"></script>
+    
+    <!-- Dark Mode Script -->
+    <script src="../js/darkmode.js"></script>
+    
+    <!-- Complete Profile Script -->
+    <script src="completeProfile.js"></script>
+</body>
+</html>

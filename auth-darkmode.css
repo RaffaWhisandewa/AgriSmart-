@@ -1,0 +1,420 @@
+/* ============================================
+   DARK MODE STYLES - AgriSmart Auth Pages
+   File: LOGIN/auth-darkmode.css
+   Include this file in login.html, register.html, completeProfile.html
+   ============================================ */
+
+/* ==========================================
+   BODY & BACKGROUND
+   ========================================== */
+
+body.dark-mode {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #e0e0e0;
+}
+
+/* ==========================================
+   AUTH CARD
+   ========================================== */
+
+body.dark-mode .auth-card {
+    background: rgba(30, 30, 50, 0.95);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .auth-card::before {
+    background: linear-gradient(
+        to bottom right,
+        rgba(92, 184, 92, 0) 0%,
+        rgba(92, 184, 92, 0.05) 50%,
+        rgba(92, 184, 92, 0) 100%
+    );
+}
+
+@keyframes cardGlowDark {
+    0% { box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4); }
+    100% { box-shadow: 0 15px 50px rgba(92, 184, 92, 0.2); }
+}
+
+body.dark-mode .auth-card {
+    animation: fadeInUp 0.8s ease-out, cardGlowDark 6s ease-in-out infinite alternate;
+}
+
+/* ==========================================
+   AUTH HEADER
+   ========================================== */
+
+body.dark-mode .auth-header h1 {
+    background: linear-gradient(90deg, #5cb85c, #8bc34a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+body.dark-mode .auth-header p {
+    color: #a0a0a0;
+}
+
+body.dark-mode .logo {
+    filter: brightness(1.2);
+}
+
+/* ==========================================
+   FORM ELEMENTS
+   ========================================== */
+
+body.dark-mode .form-group label {
+    color: #e0e0e0;
+}
+
+body.dark-mode .form-group label .required {
+    color: #ff6b6b;
+}
+
+body.dark-mode .input-wrapper input,
+body.dark-mode .input-wrapper select {
+    background: rgba(50, 50, 70, 0.9);
+    border-color: rgba(92, 184, 92, 0.3);
+    color: #e0e0e0;
+}
+
+body.dark-mode .input-wrapper input::placeholder {
+    color: #666666;
+}
+
+body.dark-mode .input-wrapper input:focus,
+body.dark-mode .input-wrapper select:focus {
+    border-color: #5cb85c;
+    box-shadow: 0 0 0 4px rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .input-wrapper i:first-of-type {
+    color: #5cb85c;
+}
+
+body.dark-mode .input-wrapper input:focus + i,
+body.dark-mode .input-wrapper select:focus + i {
+    color: #8bc34a;
+}
+
+/* Password Toggle */
+body.dark-mode .password-toggle {
+    color: #a0a0a0;
+}
+
+body.dark-mode .password-toggle i {
+    color: #a0a0a0;
+}
+
+body.dark-mode .password-toggle:hover {
+    color: #5cb85c;
+}
+
+body.dark-mode .password-toggle:hover i {
+    color: #5cb85c;
+}
+
+/* ==========================================
+   CHECKBOX
+   ========================================== */
+
+body.dark-mode .checkbox-group label {
+    color: #a0a0a0;
+}
+
+body.dark-mode .checkbox-group label a {
+    color: #5cb85c;
+}
+
+body.dark-mode .checkbox-group label a:hover {
+    color: #8bc34a;
+}
+
+body.dark-mode .checkbox-group input[type="checkbox"] {
+    accent-color: #5cb85c;
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+
+body.dark-mode .btn-primary {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+    box-shadow: 0 4px 15px rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .btn-primary:hover {
+    background: linear-gradient(135deg, #5cb85c, #8bc34a);
+    box-shadow: 0 8px 25px rgba(92, 184, 92, 0.4);
+}
+
+body.dark-mode .btn-google {
+    background: rgba(50, 50, 70, 0.9);
+    color: #e0e0e0;
+    border: 2px solid rgba(92, 184, 92, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .btn-google:hover {
+    background: rgba(70, 70, 90, 0.9);
+    border-color: #5cb85c;
+    box-shadow: 0 4px 15px rgba(92, 184, 92, 0.2);
+}
+
+/* ==========================================
+   DIVIDER
+   ========================================== */
+
+body.dark-mode .divider::before,
+body.dark-mode .divider::after {
+    background: rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .divider span {
+    color: #a0a0a0;
+}
+
+/* ==========================================
+   AUTH FOOTER
+   ========================================== */
+
+body.dark-mode .auth-footer {
+    border-top: 1px solid rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .auth-footer p {
+    color: #a0a0a0;
+}
+
+body.dark-mode .auth-footer a {
+    color: #5cb85c;
+}
+
+body.dark-mode .auth-footer a:hover {
+    color: #8bc34a;
+}
+
+/* ==========================================
+   ERROR & SUCCESS MESSAGES
+   ========================================== */
+
+body.dark-mode .error-message {
+    background: rgba(220, 53, 69, 0.15);
+    border: 1px solid #dc3545;
+    color: #ff6b6b;
+}
+
+body.dark-mode .success-message {
+    background: rgba(92, 184, 92, 0.15);
+    border: 1px solid #5cb85c;
+    color: #5cb85c;
+}
+
+/* ==========================================
+   PASSWORD STRENGTH
+   ========================================== */
+
+body.dark-mode .password-strength {
+    background: rgba(50, 50, 70, 0.5);
+}
+
+body.dark-mode .password-hint {
+    color: #888888;
+}
+
+body.dark-mode .input-hint {
+    color: #888888;
+}
+
+/* ==========================================
+   BIDANG TAGS (untuk register & completeProfile)
+   ========================================== */
+
+body.dark-mode .bidang-tag {
+    background: rgba(50, 50, 70, 0.8);
+    border-color: rgba(92, 184, 92, 0.3);
+    color: #a0a0a0;
+}
+
+body.dark-mode .bidang-tag:hover {
+    background: rgba(70, 70, 90, 0.9);
+    border-color: #5cb85c;
+}
+
+body.dark-mode .bidang-tag.selected {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+    color: white;
+    border-color: #5cb85c;
+}
+
+/* ==========================================
+   STEP INDICATOR (untuk register)
+   ========================================== */
+
+body.dark-mode .step {
+    background: rgba(92, 184, 92, 0.2);
+}
+
+body.dark-mode .step.active {
+    background: #5cb85c;
+}
+
+/* ==========================================
+   TOAST NOTIFICATION
+   ========================================== */
+
+body.dark-mode .toast {
+    background: rgba(30, 30, 50, 0.98);
+    color: #e0e0e0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .toast.success {
+    border-left: 4px solid #5cb85c;
+}
+
+body.dark-mode .toast.success i {
+    color: #5cb85c;
+}
+
+body.dark-mode .toast.error {
+    border-left: 4px solid #dc3545;
+}
+
+body.dark-mode .toast.error i {
+    color: #ff6b6b;
+}
+
+/* ==========================================
+   GOOGLE USER BANNER (completeProfile.html)
+   ========================================== */
+
+body.dark-mode .google-user-banner {
+    background: linear-gradient(135deg, rgba(66, 133, 244, 0.15), rgba(52, 168, 83, 0.15));
+    border: 2px solid rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .google-avatar {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+    box-shadow: 0 4px 12px rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .google-user-name {
+    color: #e0e0e0;
+}
+
+body.dark-mode .google-user-email {
+    color: #a0a0a0;
+}
+
+body.dark-mode .google-badge {
+    background: rgba(50, 50, 70, 0.9);
+    color: #a0a0a0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================
+   SUCCESS MODAL (register.html)
+   ========================================== */
+
+body.dark-mode .success-modal {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .success-modal-content {
+    background: rgba(30, 30, 50, 0.98);
+}
+
+body.dark-mode .success-modal-header {
+    background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+}
+
+body.dark-mode .success-modal-body h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .success-modal-body p {
+    color: #a0a0a0;
+}
+
+body.dark-mode .user-info-display {
+    background: rgba(50, 50, 70, 0.5);
+    border-color: rgba(92, 184, 92, 0.3);
+}
+
+body.dark-mode .user-info-item strong {
+    color: #5cb85c;
+}
+
+body.dark-mode .user-info-item span {
+    color: #e0e0e0;
+}
+
+body.dark-mode .success-modal-footer {
+    background: rgba(0, 0, 0, 0.2);
+    border-top-color: rgba(92, 184, 92, 0.2);
+}
+
+/* ==========================================
+   FLOATING LEAVES (make more subtle in dark mode)
+   ========================================== */
+
+body.dark-mode .leaf {
+    opacity: 0.3;
+}
+
+/* ==========================================
+   LINKS
+   ========================================== */
+
+body.dark-mode a {
+    color: #5cb85c;
+}
+
+body.dark-mode a:hover {
+    color: #8bc34a;
+}
+
+/* ==========================================
+   SCROLLBAR
+   ========================================== */
+
+body.dark-mode::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.dark-mode::-webkit-scrollbar-track {
+    background: #1a1a2e;
+}
+
+body.dark-mode::-webkit-scrollbar-thumb {
+    background: #5cb85c;
+    border-radius: 5px;
+}
+
+body.dark-mode::-webkit-scrollbar-thumb:hover {
+    background: #4aa84a;
+}
+
+/* ==========================================
+   SELECTION HIGHLIGHT
+   ========================================== */
+
+body.dark-mode ::selection {
+    background: rgba(92, 184, 92, 0.3);
+    color: #ffffff;
+}
+
+body.dark-mode ::-moz-selection {
+    background: rgba(92, 184, 92, 0.3);
+    color: #ffffff;
+}
+
+/* ==========================================
+   FOCUS VISIBLE (Accessibility)
+   ========================================== */
+
+body.dark-mode :focus-visible {
+    outline: 2px solid #5cb85c;
+    outline-offset: 2px;
+}

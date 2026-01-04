@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart - Profil Saya</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="profil.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="../css/darkmode.css">
+    <link rel="stylesheet" href="../css/profil-darkmode.css">
+</head>
+<body>
+    <!-- Floating Leaves Background -->
+    <div id="leaves-container"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%232c7a2c' opacity='0.8'/><path fill='%23ffffff' d='M50 20 Q70 50 50 80 Q30 50 50 20 Z'/><circle cx='50' cy='50' r='15' fill='%23ffffff'/><path fill='%232c7a2c' d='M50 35 Q55 50 50 65 Q45 50 50 35 Z'/></svg>" 
+                     alt="AgriSmart Logo" class="logo">
+                <h1 data-lang="profile.title">Profil Saya</h1>
+            </div>
+            <p data-lang="profile.subtitle">Kelola Informasi Akun Anda</p>
+            
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li><a href="../index.html" data-lang="nav.dashboard">Dashboard</a></li>
+                    <li><a href="../monitoring.html" data-lang="nav.monitoring">Monitoring</a></li>
+                    <li><a href="../kontrol.html" data-lang="nav.control">Kontrol</a></li>
+                    <li><a href="../laporan.html" data-lang="nav.reports">Laporan</a></li>
+                    <li><a href="../pengaturan.html" data-lang="nav.settings">Pengaturan</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="profile-container">
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-title">
+                        <h2 id="profile-name">Nama Pengguna</h2>
+                        <p id="profile-email">user@email.com</p>
+                        
+                        <!-- User ID Display -->
+                        <div class="user-id-display">
+                            <span class="user-id-label" data-lang="profile.userId">ID</span>:
+                            <span class="user-id-value" id="profile-user-id">xxxxxxxxxx</span>
+                            <button type="button" class="copy-id-btn" onclick="copyUserId()" data-lang-target="title" data-lang="profile.copyUserId">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="profile-badge">
+                            <i class="fas fa-leaf"></i>
+                            <span id="profile-bidang" data-lang="profile.farmer">Petani</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div class="alert alert-success" id="success-alert">
+                    <i class="fas fa-check-circle"></i>
+                    <span data-lang="profile.profileUpdated">Profil berhasil diperbarui!</span>
+                </div>
+
+                <!-- Error Message -->
+                <div class="alert alert-error" id="error-alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="error-text">Terjadi kesalahan</span>
+                </div>
+
+                <!-- Profile Form -->
+                <form class="profile-form" id="profile-form" onsubmit="saveProfile(event)">
+                    <!-- Nama Lengkap -->
+                    <div class="form-group">
+                        <label for="fullname">
+                            <i class="fas fa-user"></i>
+                            <span data-lang="profile.fullName">Nama Lengkap</span>
+                        </label>
+                        <input type="text" id="fullname" name="fullname" data-lang-placeholder="profile.fullNamePlaceholder" placeholder="Masukkan nama lengkap" required disabled>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i>
+                            <span data-lang="profile.email">Email</span>
+                        </label>
+                        <input type="email" id="email" name="email" data-lang-placeholder="profile.emailPlaceholder" placeholder="contoh@email.com" required disabled>
+                        <small class="form-hint" data-lang="profile.emailHint">Email tidak dapat diubah</small>
+                    </div>
+
+                    <!-- Nomor HP -->
+                    <div class="form-group">
+                        <label for="phone">
+                            <i class="fas fa-phone"></i>
+                            <span data-lang="profile.phone">Nomor HP</span>
+                        </label>
+                        <input type="tel" id="phone" name="phone" data-lang-placeholder="profile.phonePlaceholder" placeholder="08xxxxxxxxxx" disabled>
+                        <small class="form-hint" data-lang="profile.phoneHint">Contoh: 081234567890</small>
+                    </div>
+
+                    <!-- Tempat & Tanggal Lahir -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="birthplace">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span data-lang="profile.birthplace">Tempat Lahir</span>
+                            </label>
+                            <input type="text" id="birthplace" name="birthplace" data-lang-placeholder="profile.birthplacePlaceholder" placeholder="Kota kelahiran" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthdate">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span data-lang="profile.birthdate">Tanggal Lahir</span>
+                            </label>
+                            <input type="date" id="birthdate" name="birthdate" disabled>
+                        </div>
+                    </div>
+
+                    <!-- Bidang Pertanian -->
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-seedling"></i>
+                            <span data-lang="profile.farmingField">Bidang Pertanian</span>
+                        </label>
+                        <div class="bidang-tags" id="bidang-container">
+                            <label class="bidang-tag disabled" data-value="cabai">
+                                <input type="checkbox" name="bidang" value="cabai" disabled>
+                                🌶️ <span data-lang="profile.chili">Cabai</span>
+                            </label>
+                            <label class="bidang-tag disabled" data-value="tomat">
+                                <input type="checkbox" name="bidang" value="tomat" disabled>
+                                🍅 <span data-lang="profile.tomato">Tomat</span>
+                            </label>
+                            <label class="bidang-tag disabled" data-value="terong">
+                                <input type="checkbox" name="bidang" value="terong" disabled>
+                                🍆 <span data-lang="profile.eggplant">Terong</span>
+                            </label>
+                            <label class="bidang-tag disabled" data-value="padi">
+                                <input type="checkbox" name="bidang" value="padi" disabled>
+                                🌾 <span data-lang="profile.rice">Padi</span>
+                            </label>
+                            <label class="bidang-tag disabled" data-value="jagung">
+                                <input type="checkbox" name="bidang" value="jagung" disabled>
+                                🌽 <span data-lang="profile.corn">Jagung</span>
+                            </label>
+                            <label class="bidang-tag disabled" data-value="sayuran">
+                                <input type="checkbox" name="bidang" value="sayuran" disabled>
+                                🥬 <span data-lang="profile.vegetables">Sayuran</span>
+                            </label>
+                            <label class="bidang-tag disabled" data-value="buah">
+                                <input type="checkbox" name="bidang" value="buah" disabled>
+                                🍎 <span data-lang="profile.fruits">Buah-buahan</span>
+                            </label>
+                            <label class="bidang-tag disabled" data-value="lainnya" id="bidang-lainnya">
+                                <input type="checkbox" name="bidang" value="lainnya" disabled>
+                                ➕ <span data-lang="profile.others">Lainnya</span>
+                            </label>
+                        </div>
+                        <!-- Custom Bidang Input -->
+                        <div class="custom-bidang" id="custom-bidang">
+                            <input type="text" id="custom-bidang-input" name="custom_bidang" data-lang-placeholder="profile.customFieldPlaceholder" placeholder="Sebutkan bidang pertanian Anda" disabled>
+                        </div>
+                    </div>
+
+                    <!-- Alamat Kebun/Lahan -->
+                    <div class="form-group">
+                        <label for="address">
+                            <i class="fas fa-map"></i>
+                            <span data-lang="profile.address">Alamat Kebun/Lahan</span>
+                        </label>
+                        <textarea id="address" name="address" data-lang-placeholder="profile.addressPlaceholder" placeholder="Masukkan alamat lengkap kebun atau lahan pertanian Anda" rows="3" disabled></textarea>
+                        <small class="form-hint" data-lang="profile.addressHint">Alamat lokasi pertanian Anda (opsional)</small>
+                    </div>
+
+                    <!-- Member Since -->
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-clock"></i>
+                            <span data-lang="profile.memberSince">Bergabung Sejak</span>
+                        </label>
+                        <input type="text" id="created-at" readonly class="readonly-input">
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-edit" id="btn-edit" onclick="enableEdit()">
+                            <i class="fas fa-edit"></i>
+                            <span data-lang="profile.editProfile">Edit Profil</span>
+                        </button>
+                        <button type="submit" class="btn btn-save" id="btn-save" style="display: none;">
+                            <i class="fas fa-save"></i>
+                            <span data-lang="profile.saveChanges">Simpan Perubahan</span>
+                        </button>
+                        <button type="button" class="btn btn-cancel" id="btn-cancel" style="display: none;" onclick="cancelEdit()">
+                            <i class="fas fa-times"></i>
+                            <span data-lang="common.cancel">Batal</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar-content">
+                <!-- Account Stats -->
+                <div class="stats-card">
+                    <h3>
+                        <i class="fas fa-chart-bar"></i> 
+                        <span data-lang="profile.statsTitle">Statistik Akun</span>
+                    </h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="stat-days">0</span>
+                                <span class="stat-label" data-lang="profile.daysJoined">Hari Bergabung</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="stat-bidang">0</span>
+                                <span class="stat-label" data-lang="profile.farmingFields">Bidang Pertanian</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" data-lang="profile.active">Aktif</span>
+                                <span class="stat-label" data-lang="profile.accountStatus">Status Akun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions-card">
+                    <h3>
+                        <i class="fas fa-bolt"></i> 
+                        <span data-lang="profile.quickActionsTitle">Aksi Cepat</span>
+                    </h3>
+                    <div class="quick-actions">
+                        <a href="../index.html" class="quick-action">
+                            <i class="fas fa-home"></i>
+                            <span data-lang="profile.dashboard">Dashboard</span>
+                        </a>
+                        <a href="../kontrol.html" class="quick-action">
+                            <i class="fas fa-sliders-h"></i>
+                            <span data-lang="profile.control">Kontrol</span>
+                        </a>
+                        <a href="../pengaturan.html" class="quick-action">
+                            <i class="fas fa-cog"></i>
+                            <span data-lang="profile.settings">Pengaturan</span>
+                        </a>
+                        <a href="#" class="quick-action" onclick="changePassword()">
+                            <i class="fas fa-key"></i>
+                            <span data-lang="profile.changePassword">Ubah Sandi</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal" id="password-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-key"></i> 
+                    <span data-lang="profile.changePasswordTitle">Ubah Kata Sandi</span>
+                </h3>
+                <button type="button" class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="password-form" onsubmit="savePassword(event)">
+                <div class="form-group">
+                    <label for="current-password" data-lang="profile.currentPassword">Kata Sandi Saat Ini</label>
+                    <div class="password-input">
+                        <input type="password" id="current-password" required>
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('current-password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new-password" data-lang="profile.newPassword">Kata Sandi Baru</label>
+                    <div class="password-input">
+                        <input type="password" id="new-password" required minlength="8">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('new-password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-new-password" data-lang="profile.confirmNewPassword">Konfirmasi Kata Sandi Baru</label>
+                    <div class="password-input">
+                        <input type="password" id="confirm-new-password" required>
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirm-new-password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()" data-lang="common.cancel">Batal</button>
+                    <button type="submit" class="btn btn-save" data-lang="common.save">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Notifikasi</span>
+    </div>
+
+    <!-- Language Files (Load first) -->
+    <script src="../lang/Id.js"></script>
+    <script src="../lang/En.js"></script>
+    
+    <!-- Language Manager -->
+    <script src="../lang/language.js"></script>
+    
+    <!-- Dark Mode Script -->
+    <script src="../js/darkmode.js"></script>
+    
+    <!-- Profile Script -->
+    <script src="profil.js"></script>
+</body>
+</html>

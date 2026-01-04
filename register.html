@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart - Daftar Akun</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="auth.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="../css/darkmode.css">
+    <link rel="stylesheet" href="auth-darkmode.css">
+    <style>
+        /* ============================================
+           SUCCESS MODAL STYLES
+           ============================================ */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(8px);
+            padding: 1rem;
+        }
+
+        .success-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideUp 0.4s ease;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .success-modal-header {
+            background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+            padding: 2rem 1.5rem;
+            color: white;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            animation: successPulse 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            100% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.1); }
+        }
+
+        .success-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .success-modal-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .success-modal-header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .success-modal-body {
+            padding: 2rem 1.5rem;
+        }
+
+        .user-id-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .user-id-section label {
+            display: block;
+            font-size: 0.9rem;
+            color: #5a6a7a;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .user-id-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, rgba(44, 122, 44, 0.08), rgba(92, 184, 92, 0.08));
+            border: 2px dashed rgba(44, 122, 44, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .user-id-box:hover {
+            border-color: rgba(44, 122, 44, 0.5);
+            background: linear-gradient(135deg, rgba(44, 122, 44, 0.12), rgba(92, 184, 92, 0.12));
+        }
+
+        .user-id-box .user-id-value {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c7a2c;
+            letter-spacing: 2px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(44, 122, 44, 0.3);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .user-id-note {
+            background: #fff8e6;
+            border: 1px solid #ffd93d;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            text-align: left;
+        }
+
+        .user-id-note i {
+            color: #f39c12;
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .user-id-note p {
+            font-size: 0.85rem;
+            color: #5a6a7a;
+            line-height: 1.5;
+        }
+
+        .user-id-note strong {
+            color: #2c7a2c;
+        }
+
+        .success-modal-footer {
+            padding: 0 1.5rem 2rem;
+        }
+
+        .btn-continue {
+            width: 100%;
+            padding: 14px 25px;
+            background: linear-gradient(135deg, #2c7a2c, #5cb85c);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-continue:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(44, 122, 44, 0.4);
+        }
+
+        .countdown-text {
+            font-size: 0.85rem;
+            color: #5a6a7a;
+            margin-top: 1rem;
+        }
+
+        .countdown-text span {
+            color: #2c7a2c;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .success-modal-content {
+                margin: 0.5rem;
+            }
+
+            .success-modal-header {
+                padding: 1.5rem 1rem;
+            }
+
+            .success-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .success-icon i {
+                font-size: 2rem;
+            }
+
+            .success-modal-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .user-id-box .user-id-value {
+                font-size: 1.1rem;
+            }
+
+            .success-modal-body {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Leaves Background -->
+    <div id="leaves-container"></div>
+
+    <div class="auth-container">
+        <div class="auth-card register">
+            <!-- Header -->
+            <div class="auth-header">
+                <div class="logo-container">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%232c7a2c' opacity='0.8'/><path fill='%23ffffff' d='M50 20 Q70 50 50 80 Q30 50 50 20 Z'/><circle cx='50' cy='50' r='15' fill='%23ffffff'/><path fill='%232c7a2c' d='M50 35 Q55 50 50 65 Q45 50 50 35 Z'/></svg>" 
+                         alt="AgriSmart Logo" class="logo">
+                    <h1>AgriSmart</h1>
+                </div>
+                <p>Daftar untuk Memulai Pertanian Cerdas</p>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text">Terjadi kesalahan</span>
+            </div>
+
+            <!-- Success Message (inline - backup) -->
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span id="success-text">Pendaftaran berhasil!</span>
+            </div>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="register-form" onsubmit="handleRegister(event)">
+                <!-- Nama Lengkap -->
+                <div class="form-group">
+                    <label for="fullname">Nama Lengkap <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="fullname" name="fullname" placeholder="Masukkan nama lengkap" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+
+                <!-- Nomor HP -->
+                <div class="form-group">
+                    <label for="phone">Nomor HP <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="tel" id="phone" name="phone" placeholder="08xxxxxxxxxx" required>
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <p class="input-hint">Contoh: 081234567890</p>
+                </div>
+
+                <!-- Tempat & Tanggal Lahir -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="birthplace">Tempat Lahir <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="birthplace" name="birthplace" placeholder="Kota kelahiran" required>
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthdate">Tanggal Lahir <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="date" id="birthdate" name="birthdate" required>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bidang Pertanian -->
+                <div class="form-group">
+                    <label>Petani di Bidang Apa? <span class="required">*</span></label>
+                    <div class="bidang-tags" id="bidang-container">
+                        <label class="bidang-tag" data-value="cabai">
+                            <input type="checkbox" name="bidang" value="cabai">
+                            🌶️ Cabai
+                        </label>
+                        <label class="bidang-tag" data-value="tomat">
+                            <input type="checkbox" name="bidang" value="tomat">
+                            🍅 Tomat
+                        </label>
+                        <label class="bidang-tag" data-value="terong">
+                            <input type="checkbox" name="bidang" value="terong">
+                            🍆 Terong
+                        </label>
+                        <label class="bidang-tag" data-value="padi">
+                            <input type="checkbox" name="bidang" value="padi">
+                            🌾 Padi
+                        </label>
+                        <label class="bidang-tag" data-value="jagung">
+                            <input type="checkbox" name="bidang" value="jagung">
+                            🌽 Jagung
+                        </label>
+                        <label class="bidang-tag" data-value="sayuran">
+                            <input type="checkbox" name="bidang" value="sayuran">
+                            🥬 Sayuran
+                        </label>
+                        <label class="bidang-tag" data-value="buah">
+                            <input type="checkbox" name="bidang" value="buah">
+                            🍎 Buah-buahan
+                        </label>
+                        <label class="bidang-tag" data-value="lainnya" id="bidang-lainnya">
+                            <input type="checkbox" name="bidang" value="lainnya">
+                            ➕ Lainnya
+                        </label>
+                    </div>
+                    <!-- Custom Bidang Input -->
+                    <div class="custom-bidang" id="custom-bidang">
+                        <div class="input-wrapper" style="margin-top: 0.5rem;">
+                            <input type="text" id="custom-bidang-input" name="custom_bidang" placeholder="Sebutkan bidang pertanian Anda">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alamat Kebun/Lahan (Opsional) -->
+                <div class="form-group">
+                    <label for="address">Alamat Kebun/Lahan (Opsional)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="address" name="address" placeholder="Alamat lokasi pertanian Anda">
+                        <i class="fas fa-map"></i>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">Kata Sandi <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Minimal 8 karakter" required minlength="8" oninput="checkPasswordStrength(this.value)">
+                        <i class="fas fa-lock"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                            <i class="fas fa-eye" id="password-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="password-strength-bar"></div>
+                    </div>
+                    <p class="password-hint" id="password-hint">Gunakan minimal 8 karakter dengan huruf dan angka</p>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirm-password">Konfirmasi Kata Sandi <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirm-password" name="confirm_password" placeholder="Ulangi kata sandi" required>
+                        <i class="fas fa-lock"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
+                            <i class="fas fa-eye" id="confirm-password-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">Saya menyetujui <a href="#">Syarat & Ketentuan</a> serta <a href="#">Kebijakan Privasi</a></label>
+                </div>
+
+                <!-- Register Button -->
+                <button type="submit" class="btn btn-primary" id="register-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Daftar Sekarang
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>atau</span>
+            </div>
+
+            <!-- Google Register -->
+            <button type="button" class="btn btn-google" id="google-register-btn" onclick="handleGoogleLogin()">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path fill='%23FFC107' d='M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z'/><path fill='%23FF3D00' d='M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z'/><path fill='%234CAF50' d='M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z'/><path fill='%231976D2' d='M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z'/></svg>" alt="Google">
+                Daftar dengan Google
+            </button>
+
+            <!-- Footer -->
+            <div class="auth-footer">
+                <p>Sudah punya akun? <a href="login.html">Masuk</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div class="success-modal" id="success-modal">
+        <div class="success-modal-content">
+            <div class="success-modal-header">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2>🎉 Selamat!</h2>
+                <p>Pendaftaran Berhasil</p>
+            </div>
+            
+            <div class="success-modal-body">
+                <div class="user-id-section">
+                    <label>User ID Anda:</label>
+                    <div class="user-id-box">
+                        <span class="user-id-value" id="modal-user-id">xYz123AbCd</span>
+                        <button type="button" class="copy-btn" onclick="copyUserIdFromModal()">
+                            <i class="fas fa-copy"></i>
+                            <span>Salin</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="user-id-note">
+                    <i class="fas fa-lightbulb"></i>
+                    <p><strong>Simpan User ID ini!</strong><br>Anda akan memerlukan ID ini untuk menghubungkan alat penyiram dengan akun Anda.</p>
+                </div>
+            </div>
+            
+            <div class="success-modal-footer">
+                <button type="button" class="btn-continue" onclick="goToDashboard()">
+                    <i class="fas fa-arrow-right"></i>
+                    Lanjut ke Dashboard
+                </button>
+                <p class="countdown-text">Otomatis dialihkan dalam <span id="countdown">10</span> detik</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Pesan notifikasi</span>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+    
+        <!-- Language Files (Load first) -->
+    <script src="../lang/Id.js"></script>
+    <script src="../lang/En.js"></script>
+    
+    <!-- Language Manager -->
+    <script src="../lang/language.js"></script>
+    
+    <!-- Dark Mode Script -->
+    <script src="../js/darkmode.js"></script>
+
+    <!-- Auth Script -->
+    <script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32 Connection Test</title>
+    <style>
+        body { 
+            font-family: monospace; 
+            padding: 20px; 
+            background: #1a1a1a; 
+            color: #0f0; 
+        }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .result {
+            background: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+        }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+    </style>
+</head>
+<body>
+    <h1>🔍 ESP32 Connection Test</h1>
+    
+    <div>
+        <label>ESP32 IP: </label>
+        <input type="text" id="ip" value="192.168.1.93" style="padding: 5px; width: 150px;">
+    </div>
+    
+    <h2>Test Methods:</h2>
+    
+    <button onclick="test1()">1. Test dengan Image Load</button><br>
+    <button onclick="test2()">2. Test dengan Fetch (no CORS)</button><br>
+    <button onclick="test3()">3. Test dengan Fetch + CORS</button><br>
+    <button onclick="test4()">4. Direct Link Test</button><br>
+    
+    <div id="result" class="result"></div>
+    
+    <script>
+        function log(msg, isError = false) {
+            const result = document.getElementById('result');
+            const className = isError ? 'error' : 'success';
+            result.innerHTML += `<div class="${className}">${msg}</div>`;
+        }
+        
+        function clear() {
+            document.getElementById('result').innerHTML = '';
+        }
+        
+        function getIP() {
+            return document.getElementById('ip').value;
+        }
+        
+        // Test 1: Image load (bypass CORS)
+        function test1() {
+            clear();
+            const ip = getIP();
+            log('Test 1: Loading image from ESP32...');
+            
+            const img = new Image();
+            img.onload = function() {
+                log('✅ SUCCESS! ESP32 dapat diakses!', false);
+                log(`Image loaded: ${img.width}x${img.height}px`, false);
+            };
+            img.onerror = function() {
+                log('❌ FAILED! ESP32 tidak bisa diakses!', true);
+                log('Kemungkinan: IP salah atau ESP32 mati', true);
+            };
+            img.src = `http://${ip}/capture?_t=${Date.now()}`;
+        }
+        
+        // Test 2: Fetch no CORS (mode: no-cors)
+        async function test2() {
+            clear();
+            const ip = getIP();
+            log('Test 2: Fetch with no-cors mode...');
+            
+            try {
+                const response = await fetch(`http://${ip}/status`, {
+                    mode: 'no-cors'
+                });
+                log('✅ Request completed (opaque response)', false);
+                log('Note: Cannot read response in no-cors mode', false);
+            } catch (error) {
+                log(`❌ FAILED: ${error.message}`, true);
+            }
+        }
+        
+        // Test 3: Fetch with CORS
+        async function test3() {
+            clear();
+            const ip = getIP();
+            log('Test 3: Fetch /status with CORS...');
+            
+            try {
+                const response = await fetch(`http://${ip}/status`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                log(`Response status: ${response.status}`, false);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log('✅ SUCCESS! Data received:', false);
+                    log(JSON.stringify(data, null, 2), false);
+                    
+                    if (data.fps !== undefined) {
+                        log(`📊 FPS: ${data.fps}`, false);
+                    }
+                } else {
+                    log(`❌ HTTP Error: ${response.status}`, true);
+                }
+            } catch (error) {
+                log(`❌ FAILED: ${error.message}`, true);
+                log(`Error type: ${error.name}`, true);
+                
+                if (error.name === 'TypeError') {
+                    log('Kemungkinan: CORS header tidak ada di ESP32!', true);
+                }
+            }
+        }
+        
+        // Test 4: Direct link
+        function test4() {
+            clear();
+            const ip = getIP();
+            const url = `http://${ip}/status`;
+            
+            log('Test 4: Opening direct link...');
+            log(`URL: ${url}`, false);
+            log('Check: Apakah browser bisa buka link?', false);
+            
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>

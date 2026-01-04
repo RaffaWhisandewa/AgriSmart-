@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart - Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="auth.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="../css/darkmode.css">
+    <link rel="stylesheet" href="auth-darkmode.css">
+</head>
+<body>
+    <!-- Floating Leaves Background -->
+    <div id="leaves-container"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Header -->
+            <div class="auth-header">
+                <div class="logo-container">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%232c7a2c' opacity='0.8'/><path fill='%23ffffff' d='M50 20 Q70 50 50 80 Q30 50 50 20 Z'/><circle cx='50' cy='50' r='15' fill='%23ffffff'/><path fill='%232c7a2c' d='M50 35 Q55 50 50 65 Q45 50 50 35 Z'/></svg>" 
+                         alt="AgriSmart Logo" class="logo">
+                    <h1 data-lang="auth.loginTitle">AgriSmart</h1>
+                </div>
+                <p data-lang="auth.loginSubtitle">Masuk ke Dashboard Pertanian Cerdas</p>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text" data-lang="auth.loginError">Email atau kata sandi salah</span>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span id="success-text" data-lang="auth.loginSuccess">Login berhasil! Mengalihkan...</span>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form" id="login-form" onsubmit="handleLogin(event)">
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">
+                        <span data-lang="auth.email">Email</span> 
+                        <span class="required" data-lang="auth.required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" data-lang-placeholder="auth.emailPlaceholder" placeholder="contoh@email.com" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">
+                        <span data-lang="auth.password">Kata Sandi</span> 
+                        <span class="required" data-lang="auth.required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" data-lang-placeholder="auth.passwordPlaceholder" placeholder="Masukkan kata sandi" required>
+                        <i class="fas fa-lock"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                            <i class="fas fa-eye" id="password-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div class="checkbox-group" style="margin: 0;">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember" data-lang="auth.rememberMe">Ingat saya</label>
+                    </div>
+                    <a href="#" style="color: var(--primary-color); font-size: 0.9rem; text-decoration: none;" data-lang="auth.forgotPassword">Lupa kata sandi?</a>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" class="btn btn-primary" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span data-lang="auth.loginButton">Masuk</span>
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span data-lang="auth.orDivider">atau</span>
+            </div>
+
+            <!-- Google Login -->
+            <button type="button" class="btn btn-google" id="google-login-btn" onclick="handleGoogleLogin()">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path fill='%23FFC107' d='M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z'/><path fill='%23FF3D00' d='M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z'/><path fill='%234CAF50' d='M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z'/><path fill='%231976D2' d='M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z'/></svg>" alt="Google">
+                <span data-lang="auth.googleLogin">Masuk dengan Google</span>
+            </button>
+
+            <!-- Footer -->
+            <div class="auth-footer">
+                <p>
+                    <span data-lang="auth.noAccount">Belum punya akun?</span> 
+                    <a href="register.html" data-lang="auth.registerNow">Daftar Sekarang</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Pesan notifikasi</span>
+    </div>
+
+    <!-- Language Files (Load first) -->
+    <script src="../lang/Id.js"></script>
+    <script src="../lang/En.js"></script>
+    
+    <!-- Language Manager -->
+    <script src="../lang/language.js"></script>
+    
+    <!-- Dark Mode Script -->
+    <script src="../js/darkmode.js"></script>
+    
+    <!-- Auth Script -->
+    <script src="auth.js"></script>
+</body>
+</html>

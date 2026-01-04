@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32-CAM Connection Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background: #4CAF50;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        button.secondary {
+            background: #2196F3;
+        }
+        
+        button.warning {
+            background: #ff9800;
+        }
+        
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            color: #4CAF50;
+        }
+        
+        .error {
+            color: #f44336;
+        }
+        
+        .info {
+            color: #2196F3;
+        }
+        
+        .warning {
+            color: #ff9800;
+        }
+        
+        .stream-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .stream-container img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .badge-online {
+            background: #4CAF50;
+        }
+        
+        .badge-offline {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 ESP32-CAM Connection Tester</h1>
+        
+        <div class="card">
+            <h2>📝 Camera Configuration</h2>
+            <div class="input-group">
+                <label for="cam-ip">ESP32-CAM IP Address:</label>
+                <input type="text" id="cam-ip" value="192.168.112.93" placeholder="192.168.112.93">
+            </div>
+            
+            <button onclick="testPing()">🏓 Test Ping</button>
+            <button onclick="testStatus()" class="secondary">📊 Get Status</button>
+            <button onclick="testDevice()" class="secondary">📱 Get Device Info</button>
+            <button onclick="testStream()" class="warning">📹 Test Stream</button>
+            <button onclick="testCapture()" class="warning">📸 Test Capture</button>
+            <button onclick="clearResults()">🗑️ Clear Results</button>
+            
+            <div id="results" class="result"></div>
+        </div>
+        
+        <div class="card">
+            <h2>📷 Live Stream Test <span id="stream-status"></span></h2>
+            <div class="stream-container">
+                <img id="camera-stream" style="display: none;" alt="Camera Stream">
+                <p id="stream-message" style="opacity: 0.7;">Klik "Test Stream" untuk mulai</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>💡 Troubleshooting Tips</h2>
+            <ul style="line-height: 1.8; opacity: 0.9;">
+                <li>✅ Pastikan ESP32-CAM sudah powered on dan boot sukses</li>
+                <li>✅ Cek Serial Monitor untuk melihat IP yang didapat ESP32-CAM</li>
+                <li>✅ Pastikan komputer dan ESP32-CAM di network WiFi yang sama</li>
+                <li>✅ Test dulu dengan buka http://192.168.112.93/ di browser</li>
+                <li>✅ Jika pakai HTTPS website, camera HTTP bisa diblokir (Mixed Content)</li>
+                <li>✅ Cek firewall/antivirus tidak memblokir koneksi lokal</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+        const streamImg = document.getElementById('camera-stream');
+        const streamMessage = document.getElementById('stream-message');
+        const streamStatus = document.getElementById('stream-status');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('id-ID');
+            const colors = {
+                'success': 'success',
+                'error': 'error',
+                'info': 'info',
+                'warning': 'warning'
+            };
+            
+            const colorClass = colors[type] || 'info';
+            resultsDiv.innerHTML += `<div class="${colorClass}">[${timestamp}] ${message}</div>`;
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+        
+        function getCameraIP() {
+            return document.getElementById('cam-ip').value.trim();
+        }
+        
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+        }
+        
+        async function testPing() {
+            const ip = getCameraIP();
+            log(`Testing ping to ${ip}...`, 'info');
+            
+            try {
+                const response = await fetch(`http://${ip}/ping`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ PING SUCCESS!`, 'success');
+                    log(`Response: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log(`❌ PING FAILED! Status: ${response.status} ${response.statusText}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ PING ERROR: ${error.message}`, 'error');
+                log(`Possible causes:
+- ESP32-CAM is offline or not powered
+- Wrong IP address
+- Not on same WiFi network
+- Firewall blocking connection
+- CORS issues`, 'warning');
+            }
+        }
+        
+        async function testStatus() {
+            const ip = getCameraIP();
+            log(`Getting status from ${ip}...`, 'info');
+            
+            try {
+                const response = await fetch(`http://${ip}/status`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ STATUS SUCCESS!`, 'success');
+                    log(`Response: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log(`❌ STATUS FAILED! Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ STATUS ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testDevice() {
+            const ip = getCameraIP();
+            log(`Getting device info from ${ip}...`, 'info');
+            
+            try {
+                const response = await fetch(`http://${ip}/device`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ DEVICE INFO SUCCESS!`, 'success');
+                    log(`Device ID: ${data.device_id}`, 'success');
+                    log(`MAC: ${data.mac_address}`, 'success');
+                    log(`IP: ${data.ip_address}`, 'success');
+                    log(`Linked: ${data.linked}`, 'success');
+                    log(`Full Response: ${JSON.stringify(data, null, 2)}`, 'info');
+                } else {
+                    log(`❌ DEVICE INFO FAILED! Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ DEVICE INFO ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        function testStream() {
+            const ip = getCameraIP();
+            const streamUrl = `http://${ip}/stream`;
+            
+            log(`Testing stream from ${streamUrl}...`, 'info');
+            log(`Note: Stream is MJPEG format, will load continuously`, 'warning');
+            
+            streamImg.style.display = 'block';
+            streamMessage.style.display = 'none';
+            streamImg.src = streamUrl + '?t=' + Date.now();
+            
+            streamImg.onload = function() {
+                log(`✅ STREAM CONNECTED!`, 'success');
+                streamStatus.innerHTML = '<span class="status-badge badge-online">ONLINE</span>';
+            };
+            
+            streamImg.onerror = function() {
+                log(`❌ STREAM FAILED!`, 'error');
+                log(`Possible causes:
+- Camera is offline
+- Stream endpoint not available
+- Network timeout
+- CORS policy blocking`, 'warning');
+                streamStatus.innerHTML = '<span class="status-badge badge-offline">OFFLINE</span>';
+                streamMessage.style.display = 'block';
+                streamMessage.textContent = 'Stream failed to load';
+            };
+        }
+        
+        async function testCapture() {
+            const ip = getCameraIP();
+            const captureUrl = `http://${ip}/capture`;
+            
+            log(`Testing capture from ${captureUrl}...`, 'info');
+            
+            try {
+                const response = await fetch(captureUrl, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    log(`✅ CAPTURE SUCCESS!`, 'success');
+                    log(`Content-Type: ${response.headers.get('content-type')}`, 'success');
+                    
+                    // Display captured image
+                    const blob = await response.blob();
+                    const imgUrl = URL.createObjectURL(blob);
+                    
+                    streamImg.style.display = 'block';
+                    streamMessage.style.display = 'none';
+                    streamImg.src = imgUrl;
+                    
+                    log(`Image displayed in stream container`, 'success');
+                } else {
+                    log(`❌ CAPTURE FAILED! Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ CAPTURE ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', function() {
+            log('🚀 ESP32-CAM Connection Tester Ready', 'info');
+            log(`Default Camera IP: ${getCameraIP()}`, 'info');
+            log(`Tip: Klik "Test Ping" untuk mulai`, 'warning');
+        });
+    </script>
+</body>
+</html>

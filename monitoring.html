@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AgriSmart - Dashboard Monitoring Tanaman</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="monitoring.css">
+    <link rel="stylesheet" href="css/darkmode.css">
+    
+    <!-- Language Files -->
+    <script src="lang/Id.js"></script>
+    <script src="lang/En.js"></script>
+    <script src="lang/Language.js"></script>
+    
+    <!-- Dark Mode -->
+    <script src="js/darkmode.js"></script>
+    
+    <!-- Custom styles for ESP32 Info -->
+    <style>
+        .esp32-info-bar {
+            background: linear-gradient(135deg, rgba(44,122,44,0.1), rgba(92,184,92,0.1));
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .esp32-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .esp32-info-item i {
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        .esp32-info-item .label {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+        .esp32-info-item .value {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            background: rgba(255,255,255,0.5);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        body.dark-mode .esp32-info-item .value {
+            background: rgba(0,0,0,0.2);
+        }
+        .device-offline {
+            border-left-color: #dc3545 !important;
+        }
+        .device-offline h4 i {
+            color: #dc3545 !important;
+        }
+        .status-live {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(44,122,44,0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #2c7a2c;
+            font-weight: 600;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #2c7a2c;
+            border-radius: 50%;
+            animation: pulse-live 1.5s infinite;
+        }
+        @keyframes pulse-live {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        /* pH Alert Status Styles */
+        .status-danger {
+            background: rgba(220, 53, 69, 0.15) !important;
+            color: #dc3545 !important;
+            border-color: #dc3545 !important;
+        }
+        .status-info {
+            background: rgba(59, 130, 246, 0.15) !important;
+            color: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+        }
+        .status-optimal {
+            background: rgba(44, 122, 44, 0.15) !important;
+            color: #2c7a2c !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Leaves Background -->
+    <div id="leaves-container"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%232c7a2c' opacity='0.8'/><path fill='%23ffffff' d='M50 20 Q70 50 50 80 Q30 50 50 20 Z'/><circle cx='50' cy='50' r='15' fill='%23ffffff'/><path fill='%232c7a2c' d='M50 35 Q55 50 50 65 Q45 50 50 35 Z'/></svg>"
+                    alt="AgriSmart Logo" class="logo" />
+                <h1 data-lang="monitoring.title">AgriSmart Monitoring</h1>
+            </div>
+            <p data-lang="monitoring.subtitle">Sistem Cerdas untuk Pertanian Modern</p>
+
+            <!-- User Menu -->
+            <div class="user-menu" id="user-menu">
+                <div class="user-info" onclick="toggleUserDropdown()">
+                    <div class="user-avatar" id="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name" id="user-name">Pengguna</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="user-dropdown">
+                    <div class="dropdown-header">
+                        <strong id="dropdown-fullname">Nama Pengguna</strong>
+                        <small id="dropdown-email">email@example.com</small>
+                    </div>
+                    <a href="PROFIL/profil.html" class="dropdown-item">
+                        <i class="fas fa-user-circle"></i> <span data-lang="common.myProfile">Profil Saya</span>
+                    </a>
+                    <hr>
+                    <a href="#" class="dropdown-item logout" onclick="logout(); return false;">
+                        <i class="fas fa-sign-out-alt"></i> <span data-lang="common.logout">Keluar</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li><a href="index.html" data-lang="nav.dashboard">Dashboard</a></li>
+                    <li><a href="monitoring.html" class="active" data-lang="nav.monitoring">Monitoring</a></li>
+                    <li><a href="kontrol.html" data-lang="nav.control">Kontrol</a></li>
+                    <li><a href="laporan.html" data-lang="nav.reports">Laporan</a></li>
+                    <li><a href="pengaturan.html" data-lang="nav.settings">Pengaturan</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ESP32 Info Bar -->
+        <div class="esp32-info-bar">
+            <div class="esp32-info-item">
+                <i class="fas fa-microchip"></i>
+                <span class="label">ESP32:</span>
+                <span class="value" id="esp32-ip-display">192.168.1.61</span>
+            </div>
+            <div class="esp32-info-item">
+                <i class="fas fa-clock"></i>
+                <span class="label" data-lang="monitoring.interval">Interval</span>:</span>
+                <span class="value" id="sensor-interval-display">5 <span data-lang="common.seconds">detik</span></span>
+            </div>
+            <div class="esp32-info-item">
+                <i class="fas fa-signal"></i>
+                <span class="label">RSSI:</span>
+                <span class="value" id="rssi-display">-- dBm</span>
+            </div>
+            <div class="esp32-info-item">
+                <i class="fas fa-hourglass-half"></i>
+                <span class="label" data-lang="monitoring.uptime">Uptime</span>:</span>
+                <span class="value" id="uptime-display">--</span>
+            </div>
+            <div class="esp32-info-item">
+                <i class="fas fa-plug"></i>
+                <span class="label" data-lang="monitoring.connectionType">Koneksi</span>:</span>
+                <span class="value" id="connection-type-display">WebSocket</span>
+            </div>
+        </div>
+
+        <div class="device-status">
+            <div class="device-card device-online" id="gateway-card">
+                <h4><i class="fas fa-wifi"></i> <span data-lang="monitoring.iotGateway">Gateway IoT (ESP32)</span></h4>
+                <p><span data-lang="common.status">Status</span>: <span id="gateway-status" style="color: #2c7a2c; font-weight: 600;">Connecting...</span></p>
+                <p><span data-lang="monitoring.lastUpdate">Last Update</span>: <span id="lastUpdate">-- <span data-lang="monitoring.secondsAgo">detik lalu</span></span></p>
+                <p><span data-lang="monitoring.signal">Signal</span>: <span id="signal-strength">--%</span></p>
+            </div>
+            <div class="device-card device-online" id="sensor-card">
+                <h4><i class="fas fa-thermometer-half"></i> <span>Sensor DHT11 + Soil</span></h4>
+                <p><span data-lang="monitoring.airTemperature">Air Temperature</span>: <span id="dht-temp">--°C</span></p>
+                <p><span data-lang="monitoring.soilMoisture">Soil Moisture</span>: <span id="dht-humidity">--%</span></p>
+                <p><span data-lang="common.status">Status</span>: <span id="sensor-status" style="color: #2c7a2c;"><span data-lang="common.online">Online</span></span></p>
+            </div>
+            <div class="device-card device-online" id="pump-card">
+                <h4><i class="fas fa-tint"></i> <span data-lang="monitoring.pumpStatus">Status Pompa</span></h4>
+                <p><span data-lang="monitoring.pump1">Pompa 1</span>: <span id="pump1-display">OFF</span></p>
+                <p><span data-lang="monitoring.pump2">Pompa 2</span>: <span id="pump2-display">OFF</span></p>
+                <p><span data-lang="monitoring.mode">Mode</span>: <span id="watering-mode" data-lang-dynamic="monitoring.modeManual">Manual</span></p>
+            </div>
+        </div>
+
+        <div class="monitoring-grid">
+            <div class="sensor-detail">
+                <h4><i class="fas fa-thermometer-half"></i> <span data-lang="monitoring.temperatureSensor">Sensor Suhu</span></h4>
+                <div class="sensor-reading">
+                    <span><span data-lang="monitoring.airTemperature">Air Temperature</span>: <span id="tempA">--°C</span></span>
+                    <span class="status-indicator status-optimal" id="temp-status" data-lang="dashboard.normal">Normal</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="temp-progress" style="width: 50%"></div>
+                </div>
+                <div class="sensor-reading">
+                    <span><span data-lang="monitoring.airHumidity">Humidity Sensor</span>: <span id="tempB">--%</span></span>
+                    <span class="status-indicator status-optimal" data-lang="dashboard.normal">Normal</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="air-humidity-progress" style="width: 50%"></div>
+                </div>
+            </div>
+
+            <div class="sensor-detail">
+                <h4><i class="fas fa-tint"></i> <span data-lang="monitoring.soilMoistureSensor">Sensor Kelembaban Tanah</span></h4>
+                <div class="sensor-reading">
+                    <span><span data-lang="monitoring.area1">Area 1</span>: <span id="soil1-value">--%</span></span>
+                    <span class="status-indicator status-optimal" id="soil1-status" data-lang="dashboard.optimal">Optimal</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="soil1-progress" style="width: 50%"></div>
+                </div>
+                <div class="sensor-reading">
+                    <span><span data-lang="monitoring.area2">Area 2</span>: <span id="soil2-value">--%</span></span>
+                    <span class="status-indicator status-optimal" id="soil2-status" data-lang="dashboard.optimal">Optimal</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="soil2-progress" style="width: 50%"></div>
+                </div>
+            </div>
+
+            <div class="sensor-detail">
+                <h4><i class="fas fa-flask"></i> <span data-lang="monitoring.phSensor">Sensor pH Tanah</span></h4>
+                <div class="sensor-reading">
+                    <span><span data-lang="monitoring.areaA">Area A</span>: <span id="ph-a">6.5</span></span>
+                    <span class="status-indicator status-optimal" id="ph-a-status" data-lang="dashboard.optimal">Optimal</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="ph-a-progress" style="width: 46%; background: #2c7a2c;"></div>
+                </div>
+                <div class="sensor-reading">
+                    <span><span data-lang="monitoring.areaB">Area B</span>: <span id="ph-b">6.8</span></span>
+                    <span class="status-indicator status-optimal" id="ph-b-status" data-lang="dashboard.optimal">Optimal</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="ph-b-progress" style="width: 49%; background: #2c7a2c;"></div>
+                </div>
+                <!-- pH Scale Reference -->
+                <div style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-around; text-align: center; font-size: 0.75rem; color: var(--text-secondary);">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                            <span>🔴 <span data-lang="monitoring.acidic">Asam</span></span>
+                            <span>(&lt;5.5)</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                            <span>🟢 <span data-lang="dashboard.optimal">Optimal</span></span>
+                            <span>(5.5-7.5)</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                            <span>🔵 <span data-lang="monitoring.alkaline">Basa</span></span>
+                            <span>(&gt;7.5)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sensor-detail">
+                <h4><i class="fas fa-sun"></i> <span data-lang="monitoring.lightSensor">Sensor Cahaya</span></h4>
+                <div class="sensor-reading">
+                    <span><span data-lang="monitoring.areaA">Area A</span>: <span id="light-a">920 lx</span></span>
+                    <span class="status-indicator status-optimal" data-lang="dashboard.good">Baik</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%"></div>
+                </div>
+                <div class="sensor-reading">
+                    <span><span data-lang="monitoring.areaB">Area B</span>: <span id="light-b">780 lx</span></span>
+                    <span class="status-indicator status-optimal" data-lang="dashboard.good">Baik</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 72%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span data-lang="monitoring.realtimeChart">Real-time Monitoring Chart</span>
+                </div>
+                <div class="chart-controls">
+                    <div class="status-indicator-chart status-live">
+                        <div class="pulse-dot"></div>
+                        <span data-lang="monitoring.live">LIVE</span>
+                    </div>
+                    <select class="chart-select" id="sensorSelect">
+                        <option value="temperature" data-lang="monitoring.sensorTemperature">Suhu</option>
+                        <option value="humidity" data-lang="monitoring.sensorHumidity">Kelembaban</option>
+                        <option value="ph" data-lang="monitoring.sensorPh">pH</option>
+                        <option value="light" data-lang="monitoring.sensorLight">Cahaya</option>
+                    </select>
+                    <select class="chart-select" id="timeRange">
+                        <option value="24h" data-lang="monitoring.time24h">24 Jam</option>
+                        <option value="12h" data-lang="monitoring.time12h">12 Jam</option>
+                        <option value="6h" data-lang="monitoring.time6h">6 Jam</option>
+                        <option value="1h" data-lang="monitoring.time1h">1 Jam</option>
+                    </select>
+                    <button class="chart-button" id="pauseBtn">
+                        <i class="fas fa-pause"></i> <span data-lang="monitoring.pause">Pause</span>
+                    </button>
+                    <button class="chart-button" id="exportBtn">
+                        <i class="fas fa-download"></i> <span data-lang="common.export">Export</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chart-wrapper">
+                <canvas id="monitoringChart"></canvas>
+            </div>
+
+            <div class="chart-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="avgValue">--</div>
+                    <div class="stat-label" data-lang="monitoring.average">Rata-rata</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="maxValue">--</div>
+                    <div class="stat-label" data-lang="monitoring.highest">Tertinggi</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="minValue">--</div>
+                    <div class="stat-label" data-lang="monitoring.lowest">Terendah</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="lastSync">--</div>
+                    <div class="stat-label" data-lang="monitoring.lastSync">Sinkronisasi Terakhir</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="monitoring.js"></script>
+    <script>
+        // Auth and User Menu Functions
+        const CURRENT_USER_KEY = 'agrismart_current_user';
+
+        function checkAuth() {
+            const user = localStorage.getItem(CURRENT_USER_KEY);
+            if (!user) {
+                window.location.href = 'LOGIN/login.html';
+                return null;
+            }
+            return JSON.parse(user);
+        }
+
+        function loadUserInfo() {
+            const user = checkAuth();
+            if (!user) return;
+            
+            const userName = document.getElementById('user-name');
+            const dropdownFullname = document.getElementById('dropdown-fullname');
+            const dropdownEmail = document.getElementById('dropdown-email');
+            
+            if (userName) userName.textContent = user.fullname?.split(' ')[0] || 'Pengguna';
+            if (dropdownFullname) dropdownFullname.textContent = user.fullname || 'Pengguna';
+            if (dropdownEmail) dropdownEmail.textContent = user.email || '';
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(CURRENT_USER_KEY);
+            window.location.href = 'LOGIN/login.html';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('user-menu');
+            const dropdown = document.getElementById('user-dropdown');
+            
+            if (userMenu && dropdown && !userMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Load user info on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+        });
+    </script>
+</body>
+</html>

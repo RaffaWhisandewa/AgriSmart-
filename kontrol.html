@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart - Kontrol Sistem</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="kontrol.css">
+    <link rel="stylesheet" href="css/darkmode.css">
+    
+    <!-- Language Files -->
+    <script src="lang/Id.js"></script>
+    <script src="lang/En.js"></script>
+    <script src="lang/Language.js"></script>
+    
+    <!-- Dark Mode -->
+    <script src="js/darkmode.js"></script>
+</head>
+<body>
+    <!-- Floating Leaves Background -->
+    <div id="leaves-container"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%232c7a2c' opacity='0.8'/><path fill='%23ffffff' d='M50 20 Q70 50 50 80 Q30 50 50 20 Z'/><circle cx='50' cy='50' r='15' fill='%23ffffff'/><path fill='%232c7a2c' d='M50 35 Q55 50 50 65 Q45 50 50 35 Z'/></svg>" 
+                     alt="AgriSmart Logo" class="logo">
+                <h1 data-lang="control.title">AgriSmart Kontrol Sistem</h1>
+            </div>
+            <p data-lang="control.subtitle">Manajemen Perangkat dan Otomasi</p>
+            
+            <!-- User Menu -->
+            <div class="user-menu" id="user-menu">
+                <div class="user-info" onclick="toggleUserDropdown()">
+                    <div class="user-avatar" id="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name" id="user-name">Pengguna</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="user-dropdown">
+                    <div class="dropdown-header">
+                        <strong id="dropdown-fullname">Nama Pengguna</strong>
+                        <small id="dropdown-email">email@example.com</small>
+                    </div>
+                    <a href="PROFIL/profil.html" class="dropdown-item">
+                        <i class="fas fa-user-circle"></i> <span data-lang="common.myProfile">Profil Saya</span>
+                    </a>
+                    <hr>
+                    <a href="#" class="dropdown-item logout" onclick="logout(); return false;">
+                        <i class="fas fa-sign-out-alt"></i> <span data-lang="common.logout">Keluar</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li><a href="index.html" data-lang="nav.dashboard">Dashboard</a></li>
+                    <li><a href="monitoring.html" data-lang="nav.monitoring">Monitoring</a></li>
+                    <li><a href="kontrol.html" class="active" data-lang="nav.control">Kontrol</a></li>
+                    <li><a href="laporan.html" data-lang="nav.reports">Laporan</a></li>
+                    <li><a href="pengaturan.html" data-lang="nav.settings">Pengaturan</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Camera Live Feed Panel -->
+        <div class="control-panel camera-panel">
+            <h3><i class="fas fa-camera"></i> <span data-lang="control.cameraTitle">Live Camera Feed</span></h3>
+            <div class="camera-container">
+                <div class="camera-wrapper">
+                    <img id="camera-stream" src="" alt="Camera Stream" class="camera-feed">
+                    <div class="camera-overlay" id="camera-status">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p data-lang="control.connectingCamera">Connecting to camera...</p>
+                    </div>
+                    <div class="camera-timestamp" id="camera-timestamp">
+                        <i class="fas fa-clock"></i> <span id="timestamp-text">--:--:--</span>
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <button class="btn btn-camera" onclick="refreshCamera()">
+                        <i class="fas fa-sync-alt"></i> <span data-lang="control.refresh">Refresh</span>
+                    </button>
+                    <button class="btn btn-camera" onclick="captureSnapshot()">
+                        <i class="fas fa-camera"></i> <span data-lang="control.capture">Capture</span>
+                    </button>
+                    <button class="btn btn-camera" id="stream-toggle" onclick="toggleStream()">
+                        <i class="fas fa-pause"></i> <span data-lang="control.pause">Pause</span>
+                    </button>
+                </div>
+                <div class="camera-info">
+                    <div class="info-item">
+                        <strong data-lang="control.resolution">Resolution</strong>: <span id="camera-resolution">640x480</span>
+                    </div>
+                    <div class="info-item">
+                        <strong data-lang="control.fps">FPS</strong>: <span id="camera-fps">--</span>
+                    </div>
+                    <div class="info-item">
+                        <strong data-lang="control.cameraStatus">Status</strong>: <span id="stream-status" class="status-badge status-connecting" data-lang="control.connecting">Connecting</span>
+                    </div>
+                </div>
+                <!-- Camera Settings Panel -->
+                <div class="camera-settings">
+                    <h4><i class="fas fa-sliders-h"></i> <span data-lang="control.cameraSettings">Camera Settings</span></h4>
+                    
+                    <div class="settings-grid">
+                        <!-- XCLK MHz -->
+                        <div class="setting-item">
+                            <label for="xclk"><span class="label-text" data-lang="control.xclkMhz">XCLK MHz</span></label>
+                            <div class="setting-control">
+                                <input type="number" id="xclk" min="10" max="30" value="20" class="input-number">
+                                <button class="btn-small" onclick="setCameraXCLK()">Set</button>
+                            </div>
+                        </div>
+
+                        <!-- Resolution -->
+                        <div class="setting-item">
+                            <label for="resolution"><span class="label-text" data-lang="control.resolution">Resolution</span></label>
+                            <select id="resolution" class="select-control" onchange="setCameraResolution()">
+                                <option value="13">UXGA(1600x1200)</option>
+                                <option value="12">SXGA(1280x1024)</option>
+                                <option value="11">HD(1280x720)</option>
+                                <option value="10">XGA(1024x768)</option>
+                                <option value="9">SVGA(800x600)</option>
+                                <option value="8">VGA(640x480)</option>
+                                <option value="7">HVGA(480x320)</option>
+                                <option value="6" selected>CIF(400x296)</option>
+                                <option value="5">QVGA(320x240)</option>
+                                <option value="3">HQVGA(240x176)</option>
+                                <option value="0">QQVGA(160x120)</option>
+                            </select>
+                        </div>
+
+                        <!-- Quality -->
+                        <div class="setting-item">
+                            <label for="quality"><span class="label-text" data-lang="control.quality">Quality</span> : <span class="label-value" id="quality-value">10</span></label>
+                            <input type="range" id="quality" min="4" max="63" value="10" class="slider-control" oninput="debouncedQualityUpdate(this.value)">
+                        </div>
+
+                        <!-- Brightness -->
+                        <div class="setting-item">
+                            <label for="brightness"><span class="label-text" data-lang="control.brightness">Brightness</span> : <span class="label-value" id="brightness-value">0</span></label>
+                            <input type="range" id="brightness" min="-2" max="2" value="0" class="slider-control" oninput="debouncedBrightnessUpdate(this.value)">
+                        </div>
+
+                        <!-- Contrast -->
+                        <div class="setting-item">
+                            <label for="contrast"><span class="label-text" data-lang="control.contrast">Contrast</span> : <span class="label-value" id="contrast-value">0</span></label>
+                            <input type="range" id="contrast" min="-2" max="2" value="0" class="slider-control" oninput="debouncedContrastUpdate(this.value)">
+                        </div>
+
+                        <!-- Saturation -->
+                        <div class="setting-item">
+                            <label for="saturation"><span class="label-text" data-lang="control.saturation">Saturation</span> : <span class="label-value" id="saturation-value">0</span></label>
+                            <input type="range" id="saturation" min="-2" max="2" value="0" class="slider-control" oninput="debouncedSaturationUpdate(this.value)">
+                        </div>
+
+                        <!-- Special Effect -->
+                        <div class="setting-item">
+                            <label for="special-effect"><span class="label-text" data-lang="control.specialEffect">Special Effect</span></label>
+                            <select id="special-effect" class="select-control" onchange="setCameraEffect()">
+                                <option value="0" selected data-lang="control.noEffect">No Effect</option>
+                                <option value="1" data-lang="control.negative">Negative</option>
+                                <option value="2" data-lang="control.grayscale">Grayscale</option>
+                                <option value="3" data-lang="control.redTint">Red Tint</option>
+                                <option value="4" data-lang="control.greenTint">Green Tint</option>
+                                <option value="5" data-lang="control.blueTint">Blue Tint</option>
+                            </select>
+                        </div>
+
+                        <!-- LED Intensity -->
+                        <div class="setting-item">
+                            <label for="led-intensity"><span class="label-text" data-lang="control.ledIntensity">LED Intensity</span> : <span class="label-value" id="led-value">0</span></label>
+                            <input type="range" id="led-intensity" min="0" max="255" value="0" class="slider-control" oninput="debouncedLEDUpdate(this.value)">
+                            <div class="led-buttons">
+                                <button class="btn-small" onclick="setLED(0)">OFF</button>
+                                <button class="btn-small" onclick="setLED(128)">50%</button>
+                                <button class="btn-small" onclick="setLED(255)">MAX</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn" onclick="resetCameraSettings()">
+                            <i class="fas fa-undo"></i> <span data-lang="control.resetToDefault">Reset to Default</span>
+                        </button>
+                        <button class="btn" onclick="saveCameraSettings()">
+                            <i class="fas fa-save"></i> <span data-lang="control.saveSettings">Save Settings</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hidden canvas for snapshot -->
+                <canvas id="snapshot-canvas" style="display: none;"></canvas>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <h3><i class="fas fa-tint"></i> <span data-lang="control.wateringControl">Kontrol Penyiraman</span></h3>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.autoMode">Mode Otomatis</strong>
+                    <p data-lang="control.autoModeDesc">Penyiraman berdasarkan kelembaban tanah</p>
+                </div>
+                <div class="toggle-switch" data-control="auto-watering" onclick="toggleControl(this, 'auto-watering')"></div>
+            </div>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.scheduledWatering">Jadwal Penyiraman</strong>
+                    <p data-lang="control.scheduledWateringDesc">Pagi: 06:00, Sore: 17:00</p>
+                </div>
+                <div class="toggle-switch" data-control="scheduled-watering" onclick="toggleControl(this, 'scheduled-watering')"></div>
+            </div>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.manualWatering">Penyiraman Manual</strong>
+                    <p data-lang="control.manualWateringDesc">Kontrol langsung untuk semua area</p>
+                </div>
+                <button class="btn" id="manual-watering-btn" onclick="manualWatering()">
+                    <i class="fas fa-play"></i> <span data-lang="control.startWatering">Mulai Penyiraman</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <h3><i class="fas fa-leaf"></i> <span data-lang="control.fertilizingControl">Kontrol Pemupukan</span></h3>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.autoFertilizing">Sistem Pemupukan Otomatis</strong>
+                    <p data-lang="control.autoFertilizingDesc">Berdasarkan analisis pH dan nutrisi</p>
+                </div>
+                <div class="toggle-switch" onclick="toggleControl(this)"></div>
+            </div>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.scheduledFertilizing">Jadwal Pemupukan</strong>
+                    <p data-lang="control.scheduledFertilizingDesc">Setiap 3 hari sekali</p>
+                </div>
+                <div class="toggle-switch active" onclick="toggleControl(this)"></div>
+            </div>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.manualFertilizing">Pemupukan Manual</strong>
+                    <p data-lang="control.manualFertilizingDesc">Kontrol langsung aplikasi pupuk</p>
+                </div>
+                <button class="btn" onclick="manualFertilizing()">
+                    <i class="fas fa-play"></i> <span data-lang="control.startFertilizing">Mulai Pemupukan</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <h3><i class="fas fa-thermometer-half"></i> <span data-lang="control.environmentControl">Kontrol Lingkungan</span></h3>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.ventilation">Ventilasi Greenhouse</strong>
+                    <p data-lang="control.ventilationDesc">Kontrol suhu dan sirkulasi udara</p>
+                </div>
+                <div class="toggle-switch active" onclick="toggleControl(this)"></div>
+            </div>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.shadingSystem">Shading System</strong>
+                    <p data-lang="control.shadingSystemDesc">Perlindungan dari sinar matahari berlebih</p>
+                </div>
+                <div class="toggle-switch" onclick="toggleControl(this)"></div>
+            </div>
+            <div class="control-item">
+                <div>
+                    <strong data-lang="control.heatingSystem">Heating System</strong>
+                    <p data-lang="control.heatingSystemDesc">Pemanas untuk suhu malam hari</p>
+                </div>
+                <div class="toggle-switch" onclick="toggleControl(this)"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="kontrol.js"></script>
+    <script>
+        // Auth and User Menu Functions
+        const CURRENT_USER_KEY = 'agrismart_current_user';
+
+        function checkAuth() {
+            const user = localStorage.getItem(CURRENT_USER_KEY);
+            if (!user) {
+                window.location.href = 'LOGIN/login.html';
+                return null;
+            }
+            return JSON.parse(user);
+        }
+
+        function loadUserInfo() {
+            const user = checkAuth();
+            if (!user) return;
+            
+            const userName = document.getElementById('user-name');
+            const dropdownFullname = document.getElementById('dropdown-fullname');
+            const dropdownEmail = document.getElementById('dropdown-email');
+            
+            if (userName) userName.textContent = user.fullname?.split(' ')[0] || 'Pengguna';
+            if (dropdownFullname) dropdownFullname.textContent = user.fullname || 'Pengguna';
+            if (dropdownEmail) dropdownEmail.textContent = user.email || '';
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(CURRENT_USER_KEY);
+            window.location.href = 'LOGIN/login.html';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('user-menu');
+            const dropdown = document.getElementById('user-dropdown');
+            
+            if (userMenu && dropdown && !userMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+        });
+    </script>
+</body>
+</html>
